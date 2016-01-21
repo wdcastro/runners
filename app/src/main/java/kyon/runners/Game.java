@@ -15,6 +15,14 @@ import java.util.ArrayList;
  */
 public class Game {
 
+    //touch variables
+
+    public float downx;
+    public float downy;
+    public float upx;
+    public float upy;
+
+
     public static int screenWidth;
     public static int screenHeight;
     public static float screenDensity;
@@ -105,6 +113,9 @@ public class Game {
 
     public void touchEvent_actionDown(MotionEvent event){
 
+        downx = event.getX();
+        downy = event.getY();
+
     }
 
     /**
@@ -113,9 +124,7 @@ public class Game {
      * @param event MotionEvent
      */
     public void touchEvent_actionMove(MotionEvent event){
-        /*if(!runner.isJumping){
-            runner.isAttacking = true;
-        }*/
+
 
     }
 
@@ -126,9 +135,27 @@ public class Game {
      */
     public void touchEvent_actionUp(MotionEvent event){
 
-        if(!runner.isJumping && !runner.isAttacking){
-            runner.isJumping = true;
-            runner.currentFrame = 0;
+        upx = event.getX();
+        upy = event.getY();
+
+        if(Math.abs(downx-upx)<screenWidth/8 && Math.abs(downy-upy)<screenHeight/4){
+            if(!runner.isJumping && !runner.isAttacking){
+                runner.isJumping = true;
+                runner.currentFrame = 0;
+            }
+        } else {
+            if(downx-upx < 0){//point of touch is less than point of release = left to right
+                if(!runner.isJumping && !runner.isAttacking){
+                    runner.isAttacking = true;
+                    runner.currentFrame = 0;
+                }
+            }
+
+            if(downy-upy < 0){//point of touch is less than point of release = up to down
+                //do nothing
+            }
         }
+
+
     }
 }

@@ -64,19 +64,27 @@ public class Runner {
 
     public void getCurrentFrame(){
         //jumping code
-        if(isJumping){ //and is not attacking to come later
-            striptodraw = Game.jumpingStrip;
-            frameCount = 12;
-            if(currentFrame<6 && y>originaly-jumpHeight){
-                y-=jumpHeight/6;
-            } else if(y<=originaly){
-                y+=jumpHeight/6;
+        if(isAttacking){
+            if(isJumping){
+                //load jumping attack shits
+                //return
+            } else {
+                striptodraw = Game.throwingStrip;
+                frameCount = 6;
             }
-
-
-        } else {//not jumping and not attacking
-            striptodraw = Game.runnerStrip;
-            frameCount = 7;
+        } else{
+            if(isJumping){
+                striptodraw = Game.jumpingStrip;
+                frameCount = 12;
+                if(currentFrame<6 && y>originaly-jumpHeight){
+                    y-=jumpHeight/6;
+                } else if(y<=originaly){
+                    y+=jumpHeight/6;
+                }
+            } else {
+                striptodraw = Game.runnerStrip;
+                frameCount = 7;
+            }
         }
         if(currentFrame < frameCount-1){
             currentFrame++;
