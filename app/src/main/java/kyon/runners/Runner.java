@@ -37,6 +37,7 @@ public class Runner {
     private Bitmap striptodraw;
 
     public int currentFrame;
+    public int tempcurrentFrame;
 
     public Runner (int x){
         this.x = x;
@@ -66,23 +67,24 @@ public class Runner {
         //jumping code
         if(isAttacking){
             if(isJumping){
-                //load jumping attack shits
-                //return
+                striptodraw = Game.jumpingthrowScaled;
+                tempcurrentFrame = currentFrame;
+                frameCount = 8;
             } else {
-                striptodraw = Game.throwingStrip;
+                striptodraw = Game.runningthrowScaled;
                 frameCount = 6;
             }
         } else{
             if(isJumping){
-                striptodraw = Game.jumpingStrip;
+                striptodraw = Game.jumpingScaled;
                 frameCount = 12;
-                if(currentFrame<6 && y>originaly-jumpHeight){
+                if(currentFrame<6 && y>originaly-jumpHeight && !isAttacking){
                     y-=jumpHeight/6;
-                } else if(y<=originaly){
+                } else if(y<=originaly && !isAttacking){
                     y+=jumpHeight/6;
                 }
             } else {
-                striptodraw = Game.runnerStrip;
+                striptodraw = Game.runningScaled;
                 frameCount = 7;
             }
         }
@@ -93,6 +95,10 @@ public class Runner {
             //change back to default run if in different states
             if(isAttacking){
                 isAttacking = false;
+                if(isJumping){
+                    striptodraw = Game.jumpingScaled;
+                    currentFrame = tempcurrentFrame;
+                }
             } else if(isJumping){
                 isJumping = false;
             }

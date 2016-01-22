@@ -38,9 +38,11 @@ public class Game {
     public static Bitmap runninganimationStrip;
     public static Bitmap jumpinganimationStrip;
     public static Bitmap runningthrowStrip;
-    public static Bitmap runnerStrip;
-    public static Bitmap jumpingStrip;
-    public static Bitmap throwingStrip;
+    public static Bitmap jumpingthrowStrip;
+    public static Bitmap runningScaled;
+    public static Bitmap jumpingScaled;
+    public static Bitmap runningthrowScaled;
+    public static Bitmap jumpingthrowScaled;
 
     private Paint paintForImages;
 
@@ -83,6 +85,8 @@ public class Game {
         canvas.drawText("Game is running: " + gameTimeSec + " sec", screenWidth/4, screenHeight/2, paint);
         canvas.drawText("frame: " + runner.getFrameNumber(), screenWidth/4, screenHeight/2+30, paint);
         canvas.drawText("y: " + runner.y, screenWidth/4, screenHeight/2+60, paint);
+        canvas.drawText("is attacking:" + runner.isAttacking, screenWidth/4, screenHeight/2+90,paint);
+        canvas.drawText("is jumping:"+runner.isJumping, screenWidth/4, screenHeight/2+120, paint);
 
     }
 
@@ -91,13 +95,17 @@ public class Game {
      */
     private void LoadContent(Resources resources){
         runninganimationStrip = BitmapFactory.decodeResource(resources, R.drawable.runninganimation);
+        runningScaled = Bitmap.createScaledBitmap(runninganimationStrip, (screenHeight/2)*7, screenHeight/2, false);
+        runninganimationStrip.recycle();
         jumpinganimationStrip = BitmapFactory.decodeResource(resources, R.drawable.jumpinganimation);
+        jumpingScaled = Bitmap.createScaledBitmap(jumpinganimationStrip, (screenHeight/2)*12, screenHeight/2, false);
+        jumpinganimationStrip.recycle();
         runningthrowStrip = BitmapFactory.decodeResource(resources, R.drawable.runningthrow);
-
-
-        runnerStrip = Bitmap.createScaledBitmap(runninganimationStrip, (screenHeight/2)*7, screenHeight/2, false);
-        jumpingStrip = Bitmap.createScaledBitmap(jumpinganimationStrip, (screenHeight/2)*12, screenHeight/2, false);
-        throwingStrip = Bitmap.createScaledBitmap(runningthrowStrip, (screenHeight/2)*6, screenHeight/2, false);
+        runningthrowScaled = Bitmap.createScaledBitmap(runningthrowStrip, (screenHeight/2)*6, screenHeight/2, false);
+        runningthrowStrip.recycle();
+        jumpingthrowStrip = BitmapFactory.decodeResource(resources, R.drawable.jumpingthrow);
+        jumpingthrowScaled = Bitmap.createScaledBitmap(jumpingthrowStrip, (screenHeight/2)*8, screenHeight/2, false);
+        jumpingthrowStrip.recycle();
         //will have to rescale the strips to the screen size
 
 
@@ -138,18 +146,21 @@ public class Game {
         upx = event.getX();
         upy = event.getY();
 
-        if(Math.abs(downx-upx)<screenWidth/8 && Math.abs(downy-upy)<screenHeight/4){
+        //if(Math.abs(downx-upx)<screenWidth/8 && Math.abs(downy-upy)<screenHeight/4){
+        if(downx < screenWidth/2){
             if(!runner.isJumping && !runner.isAttacking){
                 runner.isJumping = true;
                 runner.currentFrame = 0;
             }
-        } else {
-            if(downx-upx < 0){//point of touch is less than point of release = left to right
-                if(!runner.isJumping && !runner.isAttacking){
+        } else if (downx > screenWidth/2){
+            //if(downx-upx < 0 && Math.abs(downx-upx) > screenWidth/8 && Math.abs(downy-upy) < screenHeight/4){//point of touch is less than point of release = left to right
+
+                //can use strokethreshold to determine comfortable play
+                if(!runner.isAttacking){
                     runner.isAttacking = true;
                     runner.currentFrame = 0;
                 }
-            }
+            //}
 
             if(downy-upy < 0){//point of touch is less than point of release = up to down
                 //do nothing
