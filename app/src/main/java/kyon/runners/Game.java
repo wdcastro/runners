@@ -31,18 +31,22 @@ public class Game {
     private int gameTimeSec;
 
     private ArrayList<Enemy> enemyList;
+    private ArrayList<Projectile> projectileList;
 
     private Runner runner;
+    private Projectile p;
 
 
     public static Bitmap runninganimationStrip;
     public static Bitmap jumpinganimationStrip;
     public static Bitmap runningthrowStrip;
     public static Bitmap jumpingthrowStrip;
+    public static Bitmap projectileimage;
     public static Bitmap runningScaled;
     public static Bitmap jumpingScaled;
     public static Bitmap runningthrowScaled;
     public static Bitmap jumpingthrowScaled;
+    public static Bitmap projectileScaled;
 
     private Paint paintForImages;
 
@@ -55,9 +59,11 @@ public class Game {
         paintForImages.setFilterBitmap(true);
 
         runner = new Runner(0);
+        p = new Projectile(10,10,50);
 
         this.LoadContent(resources);
         this.ResetGame();
+
 
 
     }
@@ -67,26 +73,41 @@ public class Game {
 
 
         runner.update();
+        if(!p.expire) {
+            p.update();
+        }
+        //for(int i = 0;i<projectileList.size(); i++){
+        //   projectileList.get(i).update();
+        //}
 
     }
 
     public void Draw(Canvas canvas){
         canvas.drawColor(Color.WHITE);
         runner.draw(canvas);
+        p.draw(canvas);
 
-
+        //for(int i = 0;i<projectileList.size(); i++){
+           //Projectile p = projectileList.get(i);
+           //if(p.expire){
+             //projectileList.remove(i);
+            //} else{
+             // projectileList.get(i).draw(canvas);
+           // }
+        //}
 
         Paint paint = new Paint();
         paint.setColor(Color.BLACK);
         paint.setTextSize(40);
 
-
+        //canvas.drawBitmap(projectileScaled, 50,50,paintForImages);
 
         canvas.drawText("Game is running: " + gameTimeSec + " sec", screenWidth/4, screenHeight/2, paint);
         canvas.drawText("frame: " + runner.getFrameNumber(), screenWidth/4, screenHeight/2+30, paint);
         canvas.drawText("y: " + runner.y, screenWidth/4, screenHeight/2+60, paint);
         canvas.drawText("is attacking:" + runner.isAttacking, screenWidth/4, screenHeight/2+90,paint);
         canvas.drawText("is jumping:"+runner.isJumping, screenWidth/4, screenHeight/2+120, paint);
+        //canvas.drawText("projectile y:"+p.y, screenWidth/4, screenHeight/2+150, paint);
 
     }
 
@@ -106,6 +127,9 @@ public class Game {
         jumpingthrowStrip = BitmapFactory.decodeResource(resources, R.drawable.jumpingthrow);
         jumpingthrowScaled = Bitmap.createScaledBitmap(jumpingthrowStrip, (screenHeight/2)*8, screenHeight/2, false);
         jumpingthrowStrip.recycle();
+        projectileimage = BitmapFactory.decodeResource(resources, R.drawable.projectile);
+        projectileScaled = Bitmap.createScaledBitmap(projectileimage, (screenHeight/640)*75, (screenHeight/640)*25, false);
+        projectileimage.recycle();
         //will have to rescale the strips to the screen size
 
 
@@ -117,13 +141,14 @@ public class Game {
      * For (re)setting some game variables before game can start.
      */
     private void ResetGame(){
+
     }
 
     public void touchEvent_actionDown(MotionEvent event){
 
         downx = event.getX();
         downy = event.getY();
-
+        //while down, jump IDEA
     }
 
     /**
@@ -158,6 +183,7 @@ public class Game {
                 //can use strokethreshold to determine comfortable play
                 if(!runner.isAttacking){
                     runner.isAttacking = true;
+                    //add(new Projectile(runner.y, (runner.x + screenHeight/2), 10, projectileScaled));
                     runner.currentFrame = 0;
                 }
             //}
