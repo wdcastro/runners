@@ -20,13 +20,14 @@ public class Soundtrack {
 
     public Soundtrack(Context context){
 
-        //music = MediaPlayer.create(context, R.raw.redzone);
-        //music.start();
+        music = MediaPlayer.create(context, R.raw.redzone);
+        music.start();
 
     }
 
     public void stopMusic(){
-        //music.stop();
+        music.stop();
+        music.release();
 
     }
 

@@ -52,6 +52,14 @@ public class Runner {
 
     }
 
+    public int getFrameWidth(){
+        return frameWidth;
+    }
+
+    public int getFrameHeight(){
+        return frameHeight;
+    }
+
     public void update(){
         long time = System.currentTimeMillis();
         if(lastFrameUpdate+frameDuration<time) {

@@ -34,9 +34,6 @@ public class Game {
     //private ScrollingList<Projectile> projectileList = new ScrollingList(10);
 
     private Runner runner;
-    private Projectile p;
-    private Projectile[] array;
-
     private ArrayList<Projectile> projectileList;
 
 
@@ -63,14 +60,13 @@ public class Game {
         paintForImages.setFilterBitmap(true);
 
         runner = new Runner(0);
-        p = new Projectile(10,10,100);
+
         projectileList = new ArrayList<Projectile>(10);
-        projectileList.add(p);
-        array = new Projectile[10];
-        array[0] = p;
+
+
 
         this.LoadContent(resources);
-        this.ResetGame();
+        this.ResetGame(); //reset scores
 
 
 
@@ -81,45 +77,19 @@ public class Game {
 
 
         runner.update();
-        counter = 0;
-            //Projectile nextProjectile = projectileList.get();
-            //if(nextProjectile.expire){
-            //    projectileList.remove();
-            //}
+
         for(int i = 0; i < projectileList.size(); i++){
             projectileList.get(i).update();
-            //Projectile d = projectileList.readNext();
-            //if(d != null){
-              //  d.update();
-            //} else {
-                //break;
-            //}
+
         }
 
-        /*if(!p.expire) {
-            p.update();
-        } else{
-
-        }*/
-        //for(int i = 0;i<projectileList.size(); i++){
-        //   projectileList.get(i).update();
-        //}
 
     }
 
     public void Draw(Canvas canvas){
         canvas.drawColor(Color.WHITE);
         runner.draw(canvas);
-        /*for(int i = 0; i < array.length; i++) {
-            if (array[i] != null) {
-                if(array[i].expire){
-                    array[i]=null;
-                } else{
-                    array[i].draw(canvas);
-                }
 
-            }
-        }*/
         for(int i = 0; i < projectileList.size(); i++){
             Projectile d = projectileList.get(i);
             if(d.expire){
@@ -128,36 +98,20 @@ public class Game {
                 d.draw(canvas);
             }
         }
-        //p.draw(canvas);
-        /*for(int i = 0; i < projectileList.size(); i++){
-            Projectile d = projectileList.readNext();
-            if(d != null){
-                d.draw(canvas);
-            } else {
-                //break;
-            }
-        }*/
-        //for(int i = 0;i<projectileList.size(); i++){
-           //Projectile p = projectileList.get(i);
-           //if(p.expire){
-             //projectileList.remove(i);
-            //} else{
-             // projectileList.get(i).draw(canvas);
-           // }
-        //}
 
         Paint paint = new Paint();
         paint.setColor(Color.BLACK);
         paint.setTextSize(40);
 
         //canvas.drawBitmap(projectileScaled, 50,50,paintForImages);
-
+        /*
         canvas.drawText("Game is running: " + gameTimeSec + " sec", screenWidth/4, screenHeight/2, paint);
         canvas.drawText("frame: " + runner.getFrameNumber(), screenWidth/4, screenHeight/2+30, paint);
         canvas.drawText("y: " + runner.y, screenWidth/4, screenHeight/2+60, paint);
         canvas.drawText("is attacking:" + runner.isAttacking, screenWidth/4, screenHeight/2+90,paint);
         canvas.drawText("is jumping:"+runner.isJumping, screenWidth/4, screenHeight/2+120, paint);
         canvas.drawText("projectile list size:"+projectileList.size(), screenWidth/4, screenHeight/2+150, paint);
+        */
 
     }
 
@@ -221,29 +175,22 @@ public class Game {
         upx = event.getX();
         upy = event.getY();
 
-        //if(Math.abs(downx-upx)<screenWidth/8 && Math.abs(downy-upy)<screenHeight/4){
         if(downx < screenWidth/2){
             if(!runner.isJumping && !runner.isAttacking){
                 runner.isJumping = true;
                 runner.currentFrame = 0;
             }
         } else if (downx > screenWidth/2){
-            //if(downx-upx < 0 && Math.abs(downx-upx) > screenWidth/8 && Math.abs(downy-upy) < screenHeight/4){//point of touch is less than point of release = left to right
+
 
                 //can use strokethreshold to determine comfortable play
                 if(!runner.isAttacking){
                     runner.isAttacking = true;
-                    /*for(int i = 0; i<10; i++){
-                        if(array[i]== null){
-                            continue;
-                        } else {
-                            array[i] = new Projectile(10,10,1);
-                        }
-                    }*/
-                    projectileList.add(new Projectile(10,10,50));
+
+                    projectileList.add(new Projectile(runner.getFrameWidth(),runner.y+(runner.getFrameHeight()/2),50));
                     runner.currentFrame = 0;
                 }
-            //}
+
 
             if(downy-upy < 0){//point of touch is less than point of release = up to down
                 //do nothing
