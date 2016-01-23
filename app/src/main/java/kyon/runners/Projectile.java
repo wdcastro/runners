@@ -29,10 +29,6 @@ public class Projectile {
         }
     }
 
-    public void getCurrentFrame(){
-
-
-    }
 
     public void draw(Canvas canvas){
         Paint paint = new Paint();

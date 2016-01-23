@@ -30,11 +30,14 @@ public class Game {
 
     private int gameTimeSec;
 
-    private ArrayList<Enemy> enemyList;
-    private ArrayList<Projectile> projectileList;
+    //private ScrollingList enemyList;
+    //private ScrollingList<Projectile> projectileList = new ScrollingList(10);
 
     private Runner runner;
     private Projectile p;
+    private Projectile[] array;
+
+    private ArrayList<Projectile> projectileList;
 
 
     public static Bitmap runninganimationStrip;
@@ -47,6 +50,7 @@ public class Game {
     public static Bitmap runningthrowScaled;
     public static Bitmap jumpingthrowScaled;
     public static Bitmap projectileScaled;
+    public int counter;
 
     private Paint paintForImages;
 
@@ -59,7 +63,11 @@ public class Game {
         paintForImages.setFilterBitmap(true);
 
         runner = new Runner(0);
-        p = new Projectile(10,10,50);
+        p = new Projectile(10,10,100);
+        projectileList = new ArrayList<Projectile>(10);
+        projectileList.add(p);
+        array = new Projectile[10];
+        array[0] = p;
 
         this.LoadContent(resources);
         this.ResetGame();
@@ -73,9 +81,26 @@ public class Game {
 
 
         runner.update();
-        if(!p.expire) {
-            p.update();
+        counter = 0;
+            //Projectile nextProjectile = projectileList.get();
+            //if(nextProjectile.expire){
+            //    projectileList.remove();
+            //}
+        for(int i = 0; i < projectileList.size(); i++){
+            projectileList.get(i).update();
+            //Projectile d = projectileList.readNext();
+            //if(d != null){
+              //  d.update();
+            //} else {
+                //break;
+            //}
         }
+
+        /*if(!p.expire) {
+            p.update();
+        } else{
+
+        }*/
         //for(int i = 0;i<projectileList.size(); i++){
         //   projectileList.get(i).update();
         //}
@@ -85,8 +110,33 @@ public class Game {
     public void Draw(Canvas canvas){
         canvas.drawColor(Color.WHITE);
         runner.draw(canvas);
-        p.draw(canvas);
+        /*for(int i = 0; i < array.length; i++) {
+            if (array[i] != null) {
+                if(array[i].expire){
+                    array[i]=null;
+                } else{
+                    array[i].draw(canvas);
+                }
 
+            }
+        }*/
+        for(int i = 0; i < projectileList.size(); i++){
+            Projectile d = projectileList.get(i);
+            if(d.expire){
+                projectileList.remove(i);
+            } else {
+                d.draw(canvas);
+            }
+        }
+        //p.draw(canvas);
+        /*for(int i = 0; i < projectileList.size(); i++){
+            Projectile d = projectileList.readNext();
+            if(d != null){
+                d.draw(canvas);
+            } else {
+                //break;
+            }
+        }*/
         //for(int i = 0;i<projectileList.size(); i++){
            //Projectile p = projectileList.get(i);
            //if(p.expire){
@@ -107,7 +157,7 @@ public class Game {
         canvas.drawText("y: " + runner.y, screenWidth/4, screenHeight/2+60, paint);
         canvas.drawText("is attacking:" + runner.isAttacking, screenWidth/4, screenHeight/2+90,paint);
         canvas.drawText("is jumping:"+runner.isJumping, screenWidth/4, screenHeight/2+120, paint);
-        //canvas.drawText("projectile y:"+p.y, screenWidth/4, screenHeight/2+150, paint);
+        canvas.drawText("projectile list size:"+projectileList.size(), screenWidth/4, screenHeight/2+150, paint);
 
     }
 
@@ -183,7 +233,14 @@ public class Game {
                 //can use strokethreshold to determine comfortable play
                 if(!runner.isAttacking){
                     runner.isAttacking = true;
-                    //add(new Projectile(runner.y, (runner.x + screenHeight/2), 10, projectileScaled));
+                    /*for(int i = 0; i<10; i++){
+                        if(array[i]== null){
+                            continue;
+                        } else {
+                            array[i] = new Projectile(10,10,1);
+                        }
+                    }*/
+                    projectileList.add(new Projectile(10,10,50));
                     runner.currentFrame = 0;
                 }
             //}
