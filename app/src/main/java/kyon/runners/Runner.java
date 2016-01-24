@@ -80,7 +80,7 @@ public class Runner {
                 frameCount = 8;
             } else {
                 striptodraw = Game.runningthrowScaled;
-                frameCount = 6;
+                frameCount = 4;
             }
         } else{
             if(isJumping){

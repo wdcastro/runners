@@ -203,7 +203,38 @@ public class Game {
      */
     public void touchEvent_actionMove(MotionEvent event, int id){
 
+        float x = MotionEventCompat.getX(event, id);
+        float y = MotionEventCompat.getY(event, id);
 
+        if(id == leftpointerindex){
+            if(Math.abs(leftdownx-x)<screenWidth/8 && Math.abs(leftdowny-y)>screenHeight/4 ){//minimum swipe threshold
+                if(leftdowny>y && Math.abs(leftdowny-y)>screenHeight/6){//initial is greater than now, down to up
+                    if(!runner.isJumping){// && !runner.isAttacking
+                        runner.isJumping = true;
+                        runner.currentFrame = 0;
+                    }
+                }
+            }
+
+
+        }
+
+        if(id==rightpointerindex){
+            if(Math.abs(rightdowny-y)<screenHeight/4 && Math.abs(rightdownx-x)>screenWidth/8){
+                if(rightdownx<x){//initial is less than now, left to right
+                    if(!runner.isAttacking){
+                        runner.isAttacking = true;
+
+                        projectileList.add(new Projectile(runner.getFrameWidth(),runner.y+(runner.getFrameHeight()/2),50));
+                        runner.currentFrame = 0;
+                    }
+
+                }
+                if(rightdownx>x){//initial is greater than now, right to left
+
+                }
+            }
+        }
 
     }
 
@@ -218,21 +249,13 @@ public class Game {
         float y = MotionEventCompat.getY(event, id);
 
         if(id == leftpointerindex){
-            if(!runner.isJumping && !runner.isAttacking){
-                runner.isJumping = true;
-                runner.currentFrame = 0;
-                leftpointerindex = -1;
-            }
+            leftpointerindex = -1;//reset pointer on exit
+
         } else if (id == rightpointerindex){
 
 
                 //can use strokethreshold to determine comfortable play
-                if(!runner.isAttacking){
-                    runner.isAttacking = true;
 
-                    projectileList.add(new Projectile(runner.getFrameWidth(),runner.y+(runner.getFrameHeight()/2),50));
-                    runner.currentFrame = 0;
-                }
 
 
             /*if(downy-upy < 0){//point of touch is less than point of release = up to down
