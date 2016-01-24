@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.v4.view.MotionEventCompat;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
@@ -17,10 +18,21 @@ public class Game {
 
     //touch variables
 
-    public float downx;
-    public float downy;
-    public float upx;
-    public float upy;
+    public float leftdownx;
+    public float leftdowny;
+    public float leftinitialx;
+    public float leftinitialy;
+    public float leftupx;
+    public float leftupy;
+    public float leftpointerindex = -1;
+
+    public float rightdownx;
+    public float rightdowny;
+    public float rightinitialx;
+    public float rightinitialy;
+    public float rightupx;
+    public float rightupy;
+    public float rightpointerindex = -1;
 
 
     public static int screenWidth;
@@ -47,7 +59,7 @@ public class Game {
     public static Bitmap runningthrowScaled;
     public static Bitmap jumpingthrowScaled;
     public static Bitmap projectileScaled;
-    public int counter;
+
 
     private Paint paintForImages;
 
@@ -104,14 +116,16 @@ public class Game {
         paint.setTextSize(40);
 
         //canvas.drawBitmap(projectileScaled, 50,50,paintForImages);
-        /*
+
         canvas.drawText("Game is running: " + gameTimeSec + " sec", screenWidth/4, screenHeight/2, paint);
         canvas.drawText("frame: " + runner.getFrameNumber(), screenWidth/4, screenHeight/2+30, paint);
         canvas.drawText("y: " + runner.y, screenWidth/4, screenHeight/2+60, paint);
         canvas.drawText("is attacking:" + runner.isAttacking, screenWidth/4, screenHeight/2+90,paint);
         canvas.drawText("is jumping:"+runner.isJumping, screenWidth/4, screenHeight/2+120, paint);
         canvas.drawText("projectile list size:"+projectileList.size(), screenWidth/4, screenHeight/2+150, paint);
-        */
+        canvas.drawText("delta left x"+projectileList.size() + " delta left y", screenWidth/4, screenHeight/2+180, paint);
+        canvas.drawText("delta right x"+projectileList.size() + " delta right y", screenWidth/4, screenHeight/2+210, paint);
+
 
     }
 
@@ -148,10 +162,37 @@ public class Game {
 
     }
 
-    public void touchEvent_actionDown(MotionEvent event){
+    public void touchEvent_actionDown(MotionEvent event, int id){
 
-        downx = event.getX();
-        downy = event.getY();
+        float x = MotionEventCompat.getX(event, id);
+        float y = MotionEventCompat.getY(event, id);
+
+        if(x > screenWidth/2 && rightpointerindex == -1){
+            rightdownx = x;
+            rightdowny = y;
+            rightpointerindex = id;
+        }
+        if(x < screenWidth/2 && leftpointerindex == -1){
+            leftdownx = x;
+            leftdowny = y;
+            leftpointerindex = id;
+        }
+        //while down, jump IDEA
+    }
+    public void touchEvent_actionPointerDown(MotionEvent event, int id){
+        float x = MotionEventCompat.getX(event, id);
+        float y = MotionEventCompat.getY(event, id);
+
+        if(x > screenWidth/2 && rightpointerindex == -1){
+            rightdownx = x;
+            rightdowny = y;
+            rightpointerindex = id;
+        }
+        if(x < screenWidth/2 && leftpointerindex == -1){//if there isnt already a left touch
+            leftdownx = x;
+            leftdowny = y;
+            leftpointerindex = id;
+        }
         //while down, jump IDEA
     }
 
@@ -160,7 +201,8 @@ public class Game {
      *
      * @param event MotionEvent
      */
-    public void touchEvent_actionMove(MotionEvent event){
+    public void touchEvent_actionMove(MotionEvent event, int id){
+
 
 
     }
@@ -170,17 +212,18 @@ public class Game {
      *
      * @param event MotionEvent
      */
-    public void touchEvent_actionUp(MotionEvent event){
+    public void touchEvent_actionUp(MotionEvent event, int id){
 
-        upx = event.getX();
-        upy = event.getY();
+        float x = MotionEventCompat.getX(event, id);
+        float y = MotionEventCompat.getY(event, id);
 
-        if(downx < screenWidth/2){
+        if(id == leftpointerindex){
             if(!runner.isJumping && !runner.isAttacking){
                 runner.isJumping = true;
                 runner.currentFrame = 0;
+                leftpointerindex = -1;
             }
-        } else if (downx > screenWidth/2){
+        } else if (id == rightpointerindex){
 
 
                 //can use strokethreshold to determine comfortable play
@@ -192,9 +235,10 @@ public class Game {
                 }
 
 
-            if(downy-upy < 0){//point of touch is less than point of release = up to down
+            /*if(downy-upy < 0){//point of touch is less than point of release = up to down
                 //do nothing
-            }
+            }*/
+            rightpointerindex = -1;
         }
 
 

@@ -1,6 +1,7 @@
 package kyon.runners;
 
 import android.content.Context;
+import android.support.v4.view.MotionEventCompat;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -61,20 +62,31 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         // This is for single-touch. For multi-touch use MotionEventCompat.getActionMasked(event);
-        int action = event.getAction();
+        int action = MotionEventCompat.getActionMasked(event);
 
         if(action == MotionEvent.ACTION_DOWN){
-            game.touchEvent_actionDown(event);
+            game.touchEvent_actionDown(event, event.getActionIndex());
+        }
+
+        if(action == MotionEvent.ACTION_POINTER_DOWN){
+
+
         }
 
         if(action == MotionEvent.ACTION_MOVE) {
-            game.touchEvent_actionMove(event);
+            game.touchEvent_actionMove(event,event.getActionIndex());
 
         }
 
         if(action == MotionEvent.ACTION_UP){
-            game.touchEvent_actionUp(event);
+            game.touchEvent_actionUp(event,event.getActionIndex());
         }
+
+        if(action == MotionEvent.ACTION_POINTER_UP){
+            //game.touchEvent_actionPointerDown(event, event.getActionIndex());
+        }
+
+
 
         return true;
     }
