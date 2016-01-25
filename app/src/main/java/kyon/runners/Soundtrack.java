@@ -21,7 +21,6 @@ public class Soundtrack {
     public Soundtrack(Context context){
 
         music = MediaPlayer.create(context, R.raw.redzone);
-        music.start();
 
     }
 

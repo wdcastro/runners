@@ -51,7 +51,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     private void startGame(){
         soundtrack = new Soundtrack(c);
-        game = new Game(getWidth(), getHeight(), getResources());
+        game = new Game(getWidth(), getHeight(), getResources(), soundtrack);
 
         gameLoopThread = new GameLoopThread(this.getHolder(), game);
 

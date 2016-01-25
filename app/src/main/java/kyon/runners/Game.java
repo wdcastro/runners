@@ -35,6 +35,9 @@ public class Game {
     public float rightpointerindex = -1;
 
 
+    public Soundtrack soundtrack;
+
+
     public static int screenWidth;
     public static int screenHeight;
     public static float screenDensity;
@@ -63,7 +66,8 @@ public class Game {
 
     private Paint paintForImages;
 
-    public Game(int screenWidth, int screenHeight, Resources resources){
+    public Game(int screenWidth, int screenHeight, Resources resources, Soundtrack s){
+        soundtrack = s;
         Game.screenWidth = screenWidth;
         Game.screenHeight = screenHeight;
         Game.screenDensity = resources.getDisplayMetrics().density;
