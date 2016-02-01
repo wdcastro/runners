@@ -1,8 +1,9 @@
 package kyon.runners;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,7 +16,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
+
 
 
 public class MainActivity extends Activity {
@@ -24,12 +25,15 @@ public class MainActivity extends Activity {
     private boolean showingMainMenu;
     private GamePanel gamePanel;
 
-    public File f;
+    public static Uri external;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("debug", "isWritable "+isExternalStorageWritable());
-        f = new File(getExternalFilesDir(Environment.DIRECTORY_MUSIC), "test.txt");
+        external = Uri.fromFile(new File(getExternalFilesDir(null), "maps"));
+        Log.d("debug", "filepath "+external);
+        /*
+        f = new File(getExternalFilesDir(), "test.txt");
         String path = f.getAbsolutePath();
         Log.d("debug", "file created "+path);
         String s = "test";
@@ -49,6 +53,8 @@ public class MainActivity extends Activity {
         }catch(Exception e){
             Log.e("errors", e.toString());
         }
+        */
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -63,7 +69,7 @@ public class MainActivity extends Activity {
             showingMainMenu = true;
             // Stop game loop
             gamePanel.surfaceDestroyed(null);
-            gamePanel.soundtrack.stopMusic();
+            gamePanel.game.stop();
             setContentView(R.layout.activity_main);
         }else{
             // Quit
@@ -80,6 +86,11 @@ public class MainActivity extends Activity {
             gamePanel = new GamePanel(this);
             setContentView(gamePanel);
         }
+    }
+
+    public void onClickShowSettings(View v){
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 
 

@@ -14,8 +14,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     GameLoopThread gameLoopThread;
     Game game;
-    Soundtrack soundtrack;
-    Context c;
+    public static Context c;
 
     public GamePanel(Context context) {
         super(context);
@@ -50,8 +49,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private void startGame(){
-        soundtrack = new Soundtrack(c);
-        game = new Game(getWidth(), getHeight(), getResources(), soundtrack);
+        game = new Game(getWidth(), getHeight(), getResources());
 
         gameLoopThread = new GameLoopThread(this.getHolder(), game);
 
@@ -69,7 +67,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         if(action == MotionEvent.ACTION_POINTER_DOWN){
-
+            game.touchEvent_actionPointerDown(event, event.getActionIndex());
 
         }
 

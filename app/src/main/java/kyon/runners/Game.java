@@ -35,12 +35,12 @@ public class Game {
     public float rightpointerindex = -1;
 
 
-    public Soundtrack soundtrack;
-
 
     public static int screenWidth;
     public static int screenHeight;
     public static float screenDensity;
+
+    private boolean isPlaying = false;
 
 
     private int gameTimeSec;
@@ -62,16 +62,22 @@ public class Game {
     public static Bitmap runningthrowScaled;
     public static Bitmap jumpingthrowScaled;
     public static Bitmap projectileScaled;
+    public Background bg;
+    public static Bitmap back;
+    public static Bitmap backScaled;
+    public Soundtrack soundtrack;
 
 
     private Paint paintForImages;
 
-    public Game(int screenWidth, int screenHeight, Resources resources, Soundtrack s){
-        soundtrack = s;
+    public Game(int screenWidth, int screenHeight, Resources resources){
         Game.screenWidth = screenWidth;
         Game.screenHeight = screenHeight;
         Game.screenDensity = resources.getDisplayMetrics().density;
 
+        bg = new Background("forest", resources);
+
+        soundtrack = new Soundtrack(GamePanel.c);
         paintForImages = new Paint();
         paintForImages.setFilterBitmap(true);
 
@@ -80,7 +86,7 @@ public class Game {
         projectileList = new ArrayList<Projectile>(10);
 
 
-
+        //bg.loadContent();
         this.LoadContent(resources);
         this.ResetGame(); //reset scores
 
@@ -91,8 +97,9 @@ public class Game {
     public void Update(long gameTime){
         gameTimeSec = (int) gameTime/1000;
 
-
+        bg.update();
         runner.update();
+        soundtrack.update();
 
         for(int i = 0; i < projectileList.size(); i++){
             projectileList.get(i).update();
@@ -104,6 +111,7 @@ public class Game {
 
     public void Draw(Canvas canvas){
         canvas.drawColor(Color.WHITE);
+        bg.draw(canvas);
         runner.draw(canvas);
 
         for(int i = 0; i < projectileList.size(); i++){
@@ -119,9 +127,9 @@ public class Game {
         paint.setColor(Color.BLACK);
         paint.setTextSize(40);
 
-        //canvas.drawBitmap(projectileScaled, 50,50,paintForImages);
 
-        canvas.drawText("Game is running: " + gameTimeSec + " sec", screenWidth/4, screenHeight/2, paint);
+
+       /* canvas.drawText("Game is running: " + gameTimeSec + " sec", screenWidth/4, screenHeight/2, paint);
         canvas.drawText("frame: " + runner.getFrameNumber(), screenWidth/4, screenHeight/2+30, paint);
         canvas.drawText("y: " + runner.y, screenWidth/4, screenHeight/2+60, paint);
         canvas.drawText("is attacking:" + runner.isAttacking, screenWidth/4, screenHeight/2+90,paint);
@@ -129,6 +137,7 @@ public class Game {
         canvas.drawText("projectile list size:"+projectileList.size(), screenWidth/4, screenHeight/2+150, paint);
         canvas.drawText("delta left x"+projectileList.size() + " delta left y", screenWidth/4, screenHeight/2+180, paint);
         canvas.drawText("delta right x"+projectileList.size() + " delta right y", screenWidth/4, screenHeight/2+210, paint);
+        */
 
 
     }
@@ -137,21 +146,23 @@ public class Game {
      * Load files.
      */
     private void LoadContent(Resources resources){
-        runninganimationStrip = BitmapFactory.decodeResource(resources, R.drawable.runninganimation);
-        runningScaled = Bitmap.createScaledBitmap(runninganimationStrip, (screenHeight/2)*7, screenHeight/2, false);
+        runninganimationStrip = BitmapFactory.decodeResource(resources, R.drawable.run);
+        runningScaled = Bitmap.createScaledBitmap(runninganimationStrip, (screenHeight/2)*10, screenHeight/2, false);
         runninganimationStrip.recycle();
         jumpinganimationStrip = BitmapFactory.decodeResource(resources, R.drawable.jumpinganimation);
         jumpingScaled = Bitmap.createScaledBitmap(jumpinganimationStrip, (screenHeight/2)*12, screenHeight/2, false);
         jumpinganimationStrip.recycle();
-        runningthrowStrip = BitmapFactory.decodeResource(resources, R.drawable.runningthrow);
+        runningthrowStrip = BitmapFactory.decodeResource(resources, R.drawable.runningthrowcut);
         runningthrowScaled = Bitmap.createScaledBitmap(runningthrowStrip, (screenHeight/2)*6, screenHeight/2, false);
         runningthrowStrip.recycle();
         jumpingthrowStrip = BitmapFactory.decodeResource(resources, R.drawable.jumpingthrow);
         jumpingthrowScaled = Bitmap.createScaledBitmap(jumpingthrowStrip, (screenHeight/2)*8, screenHeight/2, false);
         jumpingthrowStrip.recycle();
         projectileimage = BitmapFactory.decodeResource(resources, R.drawable.projectile);
-        projectileScaled = Bitmap.createScaledBitmap(projectileimage, (screenHeight/640)*75, (screenHeight/640)*25, false);
+        //projectileScaled = Bitmap.createScaledBitmap(projectileimage, (screenHeight/640)*75, (screenHeight/640)*25, false);
         projectileimage.recycle();
+        bg.loadContent();
+        soundtrack.loadContent();
         //will have to rescale the strips to the screen size
 
 
@@ -166,7 +177,14 @@ public class Game {
 
     }
 
+    public void stop(){
+        soundtrack.stopMusic();
+    }
+
     public void touchEvent_actionDown(MotionEvent event, int id){
+        if(!soundtrack.isPlaying){
+            soundtrack.startMusic();
+        }
 
         float x = MotionEventCompat.getX(event, id);
         float y = MotionEventCompat.getY(event, id);

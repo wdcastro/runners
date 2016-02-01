@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.Log;
 
 /**
  * Created by John on 21/01/2016.
@@ -27,9 +28,6 @@ public class Runner {
 
     private int frameCount = 7;
 
-
-    public boolean testPos = true;
-
     public boolean isJumping = false;
     public boolean isAttacking = false;
     public boolean isRunning = true;
@@ -37,7 +35,7 @@ public class Runner {
     private Bitmap striptodraw;
 
     public int currentFrame;
-    public int tempcurrentFrame;
+
 
     public Runner (int x){
         this.x = x;
@@ -67,8 +65,6 @@ public class Runner {
             lastFrameUpdate=time;
         }
 
-        //need to update frameCount after checking for actions
-
     }
 
     public void getCurrentFrame(){
@@ -76,11 +72,10 @@ public class Runner {
         if(isAttacking){
             if(isJumping){
                 striptodraw = Game.jumpingthrowScaled;
-                tempcurrentFrame = currentFrame;
                 frameCount = 8;
             } else {
                 striptodraw = Game.runningthrowScaled;
-                frameCount = 4;
+                frameCount = 6;
             }
         } else{
             if(isJumping){
@@ -93,24 +88,23 @@ public class Runner {
                 }
             } else {
                 striptodraw = Game.runningScaled;
-                frameCount = 7;
+                frameCount = 10;
             }
         }
         if(currentFrame < frameCount-1){
             currentFrame++;
         }
-        else{
+        else{//run out of frames in current action
             //change back to default run if in different states
-            if(isAttacking){
+            if(isAttacking){//if action was attack, remove attack
                 isAttacking = false;
-                if(isJumping){
+                if(isJumping){//if the attack ended while jumping, go back to jumping
                     striptodraw = Game.jumpingScaled;
-                    currentFrame = tempcurrentFrame;
                 }
-            } else if(isJumping){
+            } else if(isJumping){//if action was jumping, remove jumping
                 isJumping = false;
             }
-            currentFrame = 0;
+            currentFrame = 0;//go to beginning of strip
         }
 
         //move and crop functions
@@ -128,17 +122,7 @@ public class Runner {
     }
 
     public void draw(Canvas canvas){
-
-        //animation code
         canvas.drawBitmap(striptodraw, frameToDraw, whereToDraw, null);
-        /*if(testPos){
-            canvas.drawBitmap(Game.pos1,30,30,null);
-        }
-        else {
-           canvas.drawBitmap(Game.pos2,30,30,null);
-        }*/
-        //remove the previous runner
-        //add new runner
 
     }
 

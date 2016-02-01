@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceScreen
+        android:key="button_graphics_key"
+        android:title="Graphics"
+        android:persistent="false">
+
+        <CheckBoxPreference
+            android:key="button_enable_flash"
+            android:title="Enable flashing"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="button_enable_gore"
+            android:title="Enable gore"
+            android:defaultValue="true"/>
+        <!-- opens another nested subscreen -->
+    </PreferenceScreen>
+        <PreferenceScreen
+            android:key="button_gameplay_key"
+            android:title="Gameplay"
+            android:persistent="false">
+
+
+        <EditTextPreference
+            android:key="button_audio_delay"
+            android:title="Audio Delay"
+            android:defaultValue="0" />
+
+            <EditTextPreference
+                android:key="button_video_delay"
+                android:title="Video Delay"
+                android:defaultValue="0" />
+
+        </PreferenceScreen>
+
+
+
+</PreferenceScreen>
