@@ -27,11 +27,10 @@ public class Background {
     private Rect frameToDraw;
     private RectF whereToDraw;
     private String stage;
-    private Resources r;
 
-    public Background(String stage, Resources resources){
+
+    public Background(String stage){
         this.stage = stage;
-        r = resources;
         frameToDraw = new Rect(0,0,Game.screenWidth, Game.screenHeight);
         whereToDraw = new RectF(0,0,Game.screenWidth, Game.screenHeight);
 
@@ -39,17 +38,17 @@ public class Background {
 
     }
 
-    public void loadContent(){
+    public void loadContent(Resources resources){
         switch(stage){
             case "forest":
                BitmapFactory.Options options = new BitmapFactory.Options();
                options.inPreferredConfig = Bitmap.Config.RGB_565;
-               bg = BitmapFactory.decodeResource(r, R.drawable.backgroundstars, options);
+               bg = BitmapFactory.decodeResource(resources, R.drawable.backgroundstars, options);
                bgScaled = Bitmap.createScaledBitmap(bg, Game.screenHeight * 3, Game.screenHeight, false);
                bg.recycle();
                // BitmapFactory.Options op2 = new BitmapFactory.Options();
 
-                torches = BitmapFactory.decodeResource(r, R.drawable.torches);
+                torches = BitmapFactory.decodeResource(resources, R.drawable.torches);
                 torchesScaled = Bitmap.createScaledBitmap(torches, Game.screenHeight * 3, Game.screenHeight, false);
                 torches.recycle();
                 Log.d("debug", "stage is "+ stage);

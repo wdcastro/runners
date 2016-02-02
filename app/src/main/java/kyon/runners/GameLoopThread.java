@@ -51,7 +51,7 @@ public class GameLoopThread extends Thread {
                     beginTime = System.currentTimeMillis();
                     framesSkipped = 0;
 
-                    this.game.Update(this.gameTime);
+                    this.game.Update();
                     this.game.Draw(canvas);
 
                     timeDiff = System.currentTimeMillis()-beginTime;
@@ -69,7 +69,7 @@ public class GameLoopThread extends Thread {
 
                 while (sleepTime < 0 && framesSkipped < MAX_FRAME_SKIPS) {
                     // We need to catch up, so we update without drawing the game to the screen.
-                    this.game.Update(this.gameTime);
+                    this.game.Update();
 
                     sleepTime += FRAME_PERIOD; // Add FRAME_PERIOD to check while condition again.
                     framesSkipped++;

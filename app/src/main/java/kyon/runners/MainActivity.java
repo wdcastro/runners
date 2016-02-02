@@ -23,6 +23,8 @@ public class MainActivity extends Activity {
 
 
     private boolean showingMainMenu;
+
+
     private GamePanel gamePanel;
 
     public static Uri external;

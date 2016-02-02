@@ -1,6 +1,8 @@
 package kyon.runners;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -24,21 +26,31 @@ public class Runner {
     private Rect frameToDraw = new Rect(0,0, frameWidth, frameHeight);
     private RectF whereToDraw = new RectF(0,0, frameWidth, frameHeight);
 
+    //Runner animation variables
+    public static Bitmap runninganimationStrip;
+    public static Bitmap jumpinganimationStrip;
+    public static Bitmap runningthrowStrip;
+    public static Bitmap jumpingthrowStrip;
+
+    public static Bitmap runningScaled;
+    public static Bitmap jumpingScaled;
+    public static Bitmap runningthrowScaled;
+    public static Bitmap jumpingthrowScaled;
+
 
 
     private int frameCount = 7;
 
     public boolean isJumping = false;
     public boolean isAttacking = false;
-    public boolean isRunning = true;
 
     private Bitmap striptodraw;
 
     public int currentFrame;
 
 
-    public Runner (int x){
-        this.x = x;
+    public Runner (){
+        this.x = 0;
         this.y = (Game.screenHeight/2)-(frameHeight/2);
         originaly = this.y;
         jumpHeight = Game.screenHeight/6;
@@ -48,6 +60,21 @@ public class Runner {
 
 
 
+    }
+
+    public void loadContent(Resources resources){
+        runninganimationStrip = BitmapFactory.decodeResource(resources, R.drawable.run);
+        runningScaled = Bitmap.createScaledBitmap(runninganimationStrip, (Game.screenHeight/2)*10, Game.screenHeight/2, false);
+        runninganimationStrip.recycle();
+        jumpinganimationStrip = BitmapFactory.decodeResource(resources, R.drawable.jumpinganimation);
+        jumpingScaled = Bitmap.createScaledBitmap(jumpinganimationStrip, (Game.screenHeight/2)*12, Game.screenHeight/2, false);
+        jumpinganimationStrip.recycle();
+        runningthrowStrip = BitmapFactory.decodeResource(resources, R.drawable.runningthrowcut);
+        runningthrowScaled = Bitmap.createScaledBitmap(runningthrowStrip, (Game.screenHeight/2)*6, Game.screenHeight/2, false);
+        runningthrowStrip.recycle();
+        jumpingthrowStrip = BitmapFactory.decodeResource(resources, R.drawable.jumpingthrow);
+        jumpingthrowScaled = Bitmap.createScaledBitmap(jumpingthrowStrip, (Game.screenHeight/2)*8, Game.screenHeight/2, false);
+        jumpingthrowStrip.recycle();
     }
 
     public int getFrameWidth(){
@@ -71,15 +98,15 @@ public class Runner {
         //jumping code
         if(isAttacking){
             if(isJumping){
-                striptodraw = Game.jumpingthrowScaled;
+                striptodraw = jumpingthrowScaled;
                 frameCount = 8;
             } else {
-                striptodraw = Game.runningthrowScaled;
+                striptodraw = runningthrowScaled;
                 frameCount = 6;
             }
         } else{
             if(isJumping){
-                striptodraw = Game.jumpingScaled;
+                striptodraw = jumpingScaled;
                 frameCount = 12;
                 if(currentFrame<6 && y>originaly-jumpHeight && !isAttacking){
                     y-=jumpHeight/6;
@@ -87,7 +114,7 @@ public class Runner {
                     y+=jumpHeight/6;
                 }
             } else {
-                striptodraw = Game.runningScaled;
+                striptodraw = runningScaled;
                 frameCount = 10;
             }
         }
@@ -99,7 +126,7 @@ public class Runner {
             if(isAttacking){//if action was attack, remove attack
                 isAttacking = false;
                 if(isJumping){//if the attack ended while jumping, go back to jumping
-                    striptodraw = Game.jumpingScaled;
+                    striptodraw = jumpingScaled;
                 }
             } else if(isJumping){//if action was jumping, remove jumping
                 isJumping = false;
@@ -115,10 +142,6 @@ public class Runner {
 
 
 
-    }
-
-    public int getFrameNumber(){
-        return currentFrame;
     }
 
     public void draw(Canvas canvas){

@@ -32,6 +32,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     public void surfaceCreated(SurfaceHolder holder) {
         // We can now safely start the game loop.
+        //can add song select vs
         startGame();
     }
 
@@ -56,6 +57,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         gameLoopThread.running = true;
         gameLoopThread.start();
     }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {

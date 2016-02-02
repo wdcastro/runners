@@ -30,27 +30,36 @@ public class Soundtrack {
     private int[] noteTimings;
     private int currentnoteCount;
     public static boolean isPlaying;
+    String directory;
     Context c;
 
 
     public Soundtrack(Context context){
-        //music = MediaPlayer.create(context, R.raw.redzone);
         c= context;
+
         isPlaying = false;
         currentnoteCount = 0;
 
     }
 
-    public void loadNotes(String mapname){
-        String directory = MainActivity.external.toString()+"/"+mapname;
-        String song = directory+"/redzone.mp3";
-        String notes = directory+"/mapdata.txt";
+    public void loadMap(String mapname){
+        directory = MainActivity.external.toString()+"/"+mapname;
         Log.d("pathdebug", "map folder "+ directory);
+    }
+
+
+    public void loadSong(){
+        String song = directory+"/song.mp3";
         Log.d("pathdebug", "song path "+song);
-        Uri directorypath = Uri.parse(directory);
         Uri songpath = Uri.parse(song);
-        Uri notespath = Uri.parse(notes);
         music = MediaPlayer.create(c, songpath);
+    }
+
+    public void loadNotes(){
+
+        String notes = directory+"/mapdata.txt";
+        Uri notespath = Uri.parse(notes);
+
         Log.d("musicdebug", String.valueOf(music.getDuration()));
         String c;
         int currentline = -1;//-1 is reading header
@@ -80,10 +89,6 @@ public class Soundtrack {
         isPlaying = true;
     }
 
-    public void loadContent(){
-        loadNotes("testmap");
-    }
-
     public void stopMusic(){
         music.stop();
         music.release();
@@ -111,12 +116,4 @@ public class Soundtrack {
         isPlaying = false;
     }
 
-    public ArrayList loadSong(String url){
-        ArrayList i = null;
-        //read song
-        //set music player
-        //create map
-        //return arraylist
-        return i;
-    }
 }

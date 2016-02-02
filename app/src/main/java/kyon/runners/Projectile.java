@@ -33,6 +33,6 @@ public class Projectile {
     public void draw(Canvas canvas){
         Paint paint = new Paint();
         paint.setFilterBitmap(true);
-        //canvas.drawBitmap(Game.projectileScaled, x, y, paint);
+        canvas.drawBitmap(Game.projectileScaled, x, y, paint);
     }
 }
